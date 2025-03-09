@@ -4,12 +4,15 @@ import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useTheme } from '@/hooks/use-theme';
+import { Moon, Sun } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,11 +72,11 @@ const Navbar: React.FC = () => {
                 key={link.name}
                 to={link.path}
                 className={cn(
-                  'relative py-2 text-sm transition-colors duration-300 hover:text-black/80',
+                  'relative py-2 text-sm transition-colors duration-300 hover:text-black/80 dark:hover:text-white/80',
                   (location.pathname === link.path || 
                    (location.pathname === '/' && location.hash === link.path.substring(1))) 
-                    ? 'text-black font-medium' 
-                    : 'text-gray-600'
+                    ? 'text-black dark:text-white font-medium' 
+                    : 'text-gray-600 dark:text-gray-400'
                 )}
               >
                 <span>{link.name}</span>
@@ -81,7 +84,7 @@ const Navbar: React.FC = () => {
                  (location.pathname === '/' && location.hash === link.path.substring(1))) && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-black rounded-full"
+                    className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
@@ -91,25 +94,53 @@ const Navbar: React.FC = () => {
             ))}
           </nav>
 
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden md:flex space-x-4 items-center">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <Moon size={18} />
+              ) : (
+                <Sun size={18} />
+              )}
+            </motion.button>
+            
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-4 py-2 rounded-full bg-black text-white text-sm font-medium transition-all hover:bg-black/90"
+              className="px-4 py-2 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-medium transition-all hover:bg-black/90 dark:hover:bg-white/90"
             >
               Resume
             </motion.button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === 'light' ? (
+                <Moon size={18} />
+              ) : (
+                <Sun size={18} />
+              )}
+            </motion.button>
+            
             <button 
               onClick={toggleMobileMenu}
-              className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-700"
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 text-gray-800 dark:text-gray-200"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -143,7 +174,7 @@ const Navbar: React.FC = () => {
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
           transition={{ duration: 0.3 }}
-          className="md:hidden glass mt-3 p-4 rounded-lg mx-3"
+          className="md:hidden glass mt-3 p-4 rounded-lg mx-3 dark:bg-gray-800/70 dark:border-gray-700/20"
         >
           <nav className="flex flex-col space-y-4">
             {navLinks.map((link) => (
@@ -154,8 +185,8 @@ const Navbar: React.FC = () => {
                   'py-2 text-sm font-medium transition-colors duration-300',
                   (location.pathname === link.path || 
                    (location.pathname === '/' && location.hash === link.path.substring(1))) 
-                    ? 'text-black font-medium' 
-                    : 'text-gray-600'
+                    ? 'text-black dark:text-white font-medium' 
+                    : 'text-gray-600 dark:text-gray-400'
                 )}
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -165,7 +196,7 @@ const Navbar: React.FC = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="mt-2 px-4 py-2 rounded-full bg-black text-white text-sm font-medium transition-all hover:bg-black/90"
+              className="mt-2 px-4 py-2 rounded-full bg-black dark:bg-white text-white dark:text-black text-sm font-medium transition-all hover:bg-black/90 dark:hover:bg-white/90"
             >
               Resume
             </motion.button>
