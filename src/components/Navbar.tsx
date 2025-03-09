@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
 
           <nav className="hidden md:flex space-x-10">
             {navLinks.map((link) => (
-              <Link
+              <HashLink
                 key={link.name}
                 to={link.path}
                 className={cn(
@@ -90,7 +90,7 @@ const Navbar: React.FC = () => {
                     transition={{ duration: 0.3 }}
                   />
                 )}
-              </Link>
+              </HashLink>
             ))}
           </nav>
 
@@ -178,7 +178,7 @@ const Navbar: React.FC = () => {
         >
           <nav className="flex flex-col space-y-4">
             {navLinks.map((link) => (
-              <Link
+              <HashLink
                 key={link.name}
                 to={link.path}
                 className={cn(
@@ -191,7 +191,7 @@ const Navbar: React.FC = () => {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.name}
-              </Link>
+              </HashLink>
             ))}
             <motion.button
               whileHover={{ scale: 1.02 }}
