@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
             </motion.p>
             
             <motion.div
-              initial={{ opacity: }, y: 20 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
               className="flex flex-wrap gap-4"
