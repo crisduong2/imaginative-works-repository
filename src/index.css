@@ -114,4 +114,33 @@
   .text-gradient {
     @apply bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent dark:from-gray-100 dark:to-gray-400;
   }
+  
+  /* Custom cursor classes */
+  .cursor-none {
+    cursor: none;
+  }
+  
+  .cursor-hover button, 
+  .cursor-hover a, 
+  .cursor-hover .clickable {
+    @apply transition-transform duration-200;
+  }
+  
+  /* Only hide the default cursor on devices that support hover */
+  @media (hover: hover) {
+    .cursor-none * {
+      cursor: none;
+    }
+  }
+  
+  /* Restore default cursor for mobile devices */
+  @media (hover: none) {
+    .cursor-none, .cursor-none * {
+      cursor: auto;
+    }
+    
+    .cursor-dot {
+      display: none;
+    }
+  }
 }
