@@ -3,10 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,12 +23,21 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Projects', path: '/#projects' },
     { name: 'About', path: '/#about' },
     { name: 'Contact', path: '/#contact' }
   ];
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
 
   return (
     <motion.header
@@ -89,9 +101,13 @@ const Navbar: React.FC = () => {
             </motion.button>
           </div>
 
-          {/* Mobile menu button - hidden on desktop */}
+          {/* Mobile menu button */}
           <div className="md:hidden">
-            <button className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300">
+            <button 
+              onClick={toggleMobileMenu}
+              className="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -99,17 +115,63 @@ const Navbar: React.FC = () => {
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                {mobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
               </svg>
             </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+          className="md:hidden glass mt-3 p-4 rounded-lg mx-3"
+        >
+          <nav className="flex flex-col space-y-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={cn(
+                  'py-2 text-sm font-medium transition-colors duration-300',
+                  (location.pathname === link.path || 
+                   (location.pathname === '/' && location.hash === link.path.substring(1))) 
+                    ? 'text-black font-medium' 
+                    : 'text-gray-600'
+                )}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="mt-2 px-4 py-2 rounded-full bg-black text-white text-sm font-medium transition-all hover:bg-black/90"
+            >
+              Resume
+            </motion.button>
+          </nav>
+        </motion.div>
+      )}
     </motion.header>
   );
 };
