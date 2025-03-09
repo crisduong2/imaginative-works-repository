@@ -9,22 +9,19 @@ interface AnimatedLayoutProps {
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 5,
   },
   in: {
     opacity: 1,
-    y: 0,
   },
   out: {
     opacity: 0,
-    y: -5,
   },
 };
 
 const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
-  duration: 0.5,
+  type: "tween",
+  ease: [0.25, 0.1, 0.25, 1], // cubic-bezier easing
+  duration: 0.6,
 };
 
 const AnimatedLayout: React.FC<AnimatedLayoutProps> = ({ children }) => {
@@ -35,8 +32,14 @@ const AnimatedLayout: React.FC<AnimatedLayoutProps> = ({ children }) => {
       exit="out"
       variants={pageVariants}
       transition={pageTransition}
-      className="min-h-screen"
+      className="min-h-screen relative overflow-hidden"
     >
+      <motion.div 
+        className="absolute inset-0 -z-10 bg-gray-50 dark:bg-gray-900"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      />
       {children}
     </motion.div>
   );
